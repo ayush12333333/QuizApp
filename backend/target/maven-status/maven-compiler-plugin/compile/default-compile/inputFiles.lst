@@ -1,0 +1,12 @@
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/QuizApplication.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/config/SecurityConfig.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/controller/AuthController.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/dto/AuthResponse.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/dto/LoginRequest.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/entity/Role.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/entity/User.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/filter/JwtAuthFilter.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/repository/UserRepository.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/service/AuthService.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/service/CustomUserDetailsService.java
+/Users/amritkumar/Desktop/QuizApp/backend/src/main/java/com/quiz/backend/util/JwtUtil.java

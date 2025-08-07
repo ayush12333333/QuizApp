@@ -3,15 +3,11 @@ package com.quiz.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import javax.management.relation.Role;
-import java.util.Set;
-
-
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 public class User {
 
     @Id
@@ -27,11 +23,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+
 }

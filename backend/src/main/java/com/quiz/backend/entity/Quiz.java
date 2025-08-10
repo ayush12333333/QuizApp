@@ -30,5 +30,7 @@ public class Quiz {
 
     @Column(nullable = false)
     private int timer; // in minutes
+
+
 }
 

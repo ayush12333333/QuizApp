@@ -1,5 +1,6 @@
 package com.quiz.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL) //  null fields will not appear
 public class QuestionResponseDTO {
     private Long id;
     private String questionText;

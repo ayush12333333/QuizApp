@@ -70,22 +70,22 @@ public class QuizServiceImpl implements QuizService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<Quiz> allQuizzes =  quizRepository.findAll();
+        List<Quiz> allQuizzes = quizRepository.findAll();
 
         return allQuizzes.stream()
-                .map(quiz -> {
-                    boolean submitted = quizResultRepository.existsByUserIdAndQuizId(user.getId(), quiz.getId());
-                    return UserQuizStatusDTO.builder()
-                            .id(quiz.getId())
-                            .title(quiz.getTitle())
-                            .category(quiz.getCategory())
-                            .difficulty(quiz.getDifficulty())
-                            .timer(quiz.getTimer())
-                            .status(submitted ? "Submitted" : "Available")
-                            .build();
-                })
+
+                .filter(quiz -> !quizResultRepository.existsByUserIdAndQuizId(user.getId(), quiz.getId()))
+                .map(quiz -> UserQuizStatusDTO.builder()
+                        .id(quiz.getId())
+                        .title(quiz.getTitle())
+                        .category(quiz.getCategory())
+                        .difficulty(quiz.getDifficulty())
+                        .timer(quiz.getTimer())
+                        .status("Available") // Ab s
+                        .build())
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public List<QuestionResponseDTO> getQuestionsForUser(Long quizId) {

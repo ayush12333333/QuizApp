@@ -29,14 +29,14 @@ public class AuthService {
 
     public AuthResponse register(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            return new AuthResponse(null, "Email already registered");
+            return new AuthResponse(null, "Email already registered",null);
         }
         user.setRole(Role.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
          userRepository.save(user);
 
         String token = jwtUtil.generateToken(user.getEmail());
-        return new AuthResponse(token, "User registered successfully");
+        return new AuthResponse(token, "User registered successfully",null);
     }
 
 
@@ -49,6 +49,6 @@ public class AuthService {
         }
 
         String token = jwtUtil.generateToken(user.getEmail());
-        return new AuthResponse(token, "Login successful");
+        return new AuthResponse(token, "Login successful",user.getRole().name());
     }
 }

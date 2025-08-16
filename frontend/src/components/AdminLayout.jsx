@@ -14,9 +14,10 @@ export default function AdminLayout() {
           {/* Desktop Menu */}
           <nav className="hidden md:flex space-x-6">
             <Link to="/admin/quizzes" className="hover:text-yellow-300 transition">Quizzes</Link>
-            <Link to="/admin/questions" className="hover:text-yellow-300 transition">Questions</Link>
-            <Link to="/admin/results" className="hover:text-yellow-300 transition">Results</Link>
-            <Link to="/admin/leaderboard" className="hover:text-yellow-300 transition">Leaderboard</Link>
+            <Link to="/admin/create-quiz" className="hover:text-yellow-300 transition">
+  CreateQuiz
+</Link>
+          
             <Link to="/logout" className="hover:text-red-400 transition">Logout</Link>
           </nav>
 
@@ -35,9 +36,11 @@ export default function AdminLayout() {
         {isOpen && (
           <nav className="md:hidden bg-purple-700 px-4 py-2 space-y-2">
             <Link to="/admin/quizzes" className="block hover:text-yellow-300 transition">Quizzes</Link>
-            <Link to="/admin/questions" className="block hover:text-yellow-300 transition">Questions</Link>
-            <Link to="/admin/results" className="block hover:text-yellow-300 transition">Results</Link>
-            <Link to="/admin/leaderboard" className="block hover:text-yellow-300 transition">Leaderboard</Link>
+            <Link to="/admin/create-quiz" className="block hover:text-yellow-300 transition">
+  Create Quiz
+</Link>
+
+            
             <Link to="/logout" className="block hover:text-red-400 transition">Logout</Link>
           </nav>
         )}

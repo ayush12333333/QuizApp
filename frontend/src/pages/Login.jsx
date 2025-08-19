@@ -1,81 +1,65 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import BASE_URL from "../services/apiConfig";
+import React, { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import { loginUser } from "../services/authService";
+import { toast } from "react-hot-toast";
+import LoginForm from "../components/LoginForm";
 
-export default function Login() {
+const Login = () => {
+  const { login } = useContext(UserContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [message, setMessage] = useState("");
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.email || !formData.password) {
+      toast.error("Email and password are required");
+      return;
+    }
+
     try {
-      const res = await fetch(`${BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const data = await loginUser(formData.email, formData.password);
 
-      const data = await res.json();
-      console.log(data.role);
-
-      if (res.ok) {
-        setMessage("Login successful!");
-        localStorage.setItem("token", data.token); // store JWT
-        navigate("/admin"); // redirect to home or dashboard
-      } else {
-        setMessage(data.message || "Login failed. Check credentials.");
+      const role = data.role;
+      const userId = data.userId;
+   
+      if (!role || !userId) {
+        toast.error("Login response incomplete");
+        return;
       }
+
+      // Save in context + localStorage
+      login(data.token, role, userId);
+      toast.success("Login successful");
+
+      //  Navigate based on role
+      if (role === "ADMIN") navigate("/adminDashboard");
+      else navigate("/userDashboard");
     } catch (err) {
-      setMessage(err);
+      if (err.message === "Invalid password") toast.error("Wrong password");
+      else toast.error("Signup first");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-purple-600">Login</h2>
-
-        {message && <p className="text-center text-red-500 mb-4">{message}</p>}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            name="email"
-            placeholder="Email address"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            required
-          />
-
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            required
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-purple-600 text-white py-2 rounded-lg font-semibold hover:bg-purple-700 transition"
-          >
-            Login
-          </button>
-        </form>
-
-        <p className="text-center text-sm mt-4">
-          Don't have an account? <a href="/signup" className="text-purple-600 hover:underline">Sign Up</a>
-        </p>
-      </div>
-    </div>
+    <LoginForm
+      title="Login"
+      formData={formData}
+      setFormData={setFormData}
+      handleSubmit={handleSubmit}
+    >
+      <p className="mt-4 text-center">
+        Don't have an account?{" "}
+        <Link
+          to="/signup"
+          className="text-blue-600 hover:underline font-semibold"
+        >
+          Sign up
+        </Link>
+      </p>
+    </LoginForm>
   );
-}
+};
+
+export default Login;

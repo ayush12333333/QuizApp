@@ -1,44 +1,74 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PublicLayout from "./components/PublicLayout";
-import AdminLayout from "./components/AdminLayout";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "./context/UserContext";
+import { Toaster } from "react-hot-toast";
+// Pages
+import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import QuizPage from "./adminpages/QuizPage";
-import AddQuestion from "./adminpages/AddQuestion";
-import ResultPage from "./adminpages/ResultPage";
-import LeaderboardPage from "./adminpages/LeaderboardPage";
-import Logout from "./adminpages/Logout";
-import CreateQuiz from "./adminpages/CreateQuiz";
-import UpdateQuestions from "./adminpages/UpdateQuestions";
+
+
+
+
+import AdminLayout from "./components/AdminLayout";
+import AdminHome from "./pages/admin/AdminHome";
+import AdminQuizzes from "./pages/admin/AdminQuizzes";
+import AdminCreate from "./pages/admin/AdminCreate";
+import UserLayout from "./components/UserLayout";
+import UserHome from "./pages/user/UserHome";
+import Leaderboard from "./pages/user/Leaderboard";
+import AvailableQuizzes from "./pages/user/AvailableQuizzes";
 
 
 function App() {
+  const { role } = useContext(UserContext); //  read role from context
+
+  const ProtectedRoute = ({ children, allowedRole }) => {
+    if (!role || role !== allowedRole) return <Navigate to="/login" replace />;
+    return children;
+  };
+
   return (
+   
     <Router>
+      
+      <Toaster />
       <Routes>
-        {/* Public pages */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-        </Route>
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
 
-        {/* Admin pages */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="quizzes" element={<QuizPage />} />
-          
-         <Route path="create-quiz" element={<CreateQuiz />} />
-        <Route path="/admin/quizzes/:quizId/questions" element={<AddQuestion />} />
-          <Route path="results" element={<ResultPage />} />
-          <Route path="leaderboard" element={<LeaderboardPage />} />
-          <Route path="/admin/quizzes/:quizId/update-question" element={<UpdateQuestions/>}></Route>
-          <Route path="/admin/quizzes/:quizId/results" element={<ResultPage />} />
-          <Route path="/admin/quizzes/:quizId/leaderboard" element={<LeaderboardPage />} />
-        </Route>
+        {/* Protected Routes */}
+       <Route
+  path="/adminDashboard/*"
+  element={
+    <ProtectedRoute allowedRole="ADMIN">
+      <AdminLayout />
+    </ProtectedRoute>
+  }
+>
+  <Route index element={<AdminHome />} />
+  <Route path="quizzes" element={<AdminQuizzes />} />
+   <Route path="create" element={<AdminCreate />} />
+</Route>
+        <Route
+          path="/userDashboard/*"
+          element={
+            <ProtectedRoute allowedRole="USER">
+              <UserLayout />
+            </ProtectedRoute>
+          }
+        >
 
-        {/* Logout */}
-        <Route path="/logout" element={<Logout />} />
+        {/* Catch-all */}
+        <Route index element={<UserHome />} />
+  <Route path="quizzes" element={<AvailableQuizzes />} />
+  <Route path="leaderboard" element={<Leaderboard />} />
+  
+</Route>
       </Routes>
     </Router>
   );

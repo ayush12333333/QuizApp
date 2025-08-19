@@ -1,16 +1,14 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import App from "./App";
-import { QuizProvider } from "./context/QuizContext";
-import { AuthProvider } from "./context/AuthContext"; // AuthProvider import karo
-import "./index.css";
+import { UserProvider } from "./context/UserProvider";
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <AuthProvider>
-      <QuizProvider>
-        <App />
-      </QuizProvider>
-    </AuthProvider>
-  </StrictMode>
+import "./index.css";
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <UserProvider>
+      <App />
+    </UserProvider>
+  </React.StrictMode>
 );

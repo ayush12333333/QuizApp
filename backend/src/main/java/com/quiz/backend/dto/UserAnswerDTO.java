@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserAnswerDTO {
     private Long questionId;
-    private String selectedOption;
+    private String SelectedOption;
 }

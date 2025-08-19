@@ -12,6 +12,7 @@ import com.quiz.backend.repository.UserRepository;
 import com.quiz.backend.util.QuizMapper;
 import lombok.RequiredArgsConstructor;
 import com.quiz.backend.entity.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,11 +41,21 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<QuizResponseDTO> getAllQuizzes() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         return quizRepository.findAll()
                 .stream()
-                .map(quizMapper::toDto)
+                .map(quiz -> {
+                    QuizResponseDTO dto = quizMapper.toDto(quiz);
+                    boolean completed = quizResultRepository.existsByUserIdAndQuizId(user.getId(), quiz.getId());
+                    dto.setCompleted(completed); // ✅ set completed
+                    return dto;
+                })
                 .toList();
     }
+
 
     @Override
     public QuizResponseDTO updateQuiz(Long id, QuizRequestDTO dto) {
@@ -73,18 +84,20 @@ public class QuizServiceImpl implements QuizService {
         List<Quiz> allQuizzes = quizRepository.findAll();
 
         return allQuizzes.stream()
-
-                .filter(quiz -> !quizResultRepository.existsByUserIdAndQuizId(user.getId(), quiz.getId()))
-                .map(quiz -> UserQuizStatusDTO.builder()
-                        .id(quiz.getId())
-                        .title(quiz.getTitle())
-                        .category(quiz.getCategory())
-                        .difficulty(quiz.getDifficulty())
-                        .timer(quiz.getTimer())
-                        .status("Available") // Ab s
-                        .build())
+                .map(quiz -> {
+                    boolean completed = quizResultRepository.existsByUserIdAndQuizId(user.getId(), quiz.getId());
+                    return UserQuizStatusDTO.builder()
+                            .id(quiz.getId())
+                            .title(quiz.getTitle())
+                            .category(quiz.getCategory())
+                            .difficulty(quiz.getDifficulty())
+                            .timer(quiz.getTimer())
+                            .status(completed ? "Completed" : "Available")
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
+
 
 
     @Override
@@ -250,6 +263,11 @@ public class QuizServiceImpl implements QuizService {
                         .build())
                 .collect(Collectors.toList());
     }
-
+    @Override
+    public boolean hasUserCompletedQuiz(Long quizId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return quizResultRepository.existsByUserIdAndQuizId(user.getId(), quizId);
+    }
 
 }

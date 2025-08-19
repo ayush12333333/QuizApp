@@ -5,6 +5,7 @@ import com.quiz.backend.entity.Quiz;
 import com.quiz.backend.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -54,5 +55,14 @@ public class UserQuizController {
         List<QuizResultHistoryDTO> history = quizService.getUserResultsHistory(principal.getName());
         return ResponseEntity.ok(history);
     }
+
+    @GetMapping("/quiz/{quizId}/status")
+    public ResponseEntity<Boolean> hasCompletedQuiz(@PathVariable Long quizId,
+                                                   Principal principal) {
+        String email = principal.getName(); // JWT se user email
+        boolean completed = quizService.hasUserCompletedQuiz(quizId, email);
+        return ResponseEntity.ok(completed);
+    }
+
 
 }

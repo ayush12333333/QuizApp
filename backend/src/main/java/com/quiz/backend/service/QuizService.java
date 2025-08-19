@@ -15,4 +15,5 @@ public interface QuizService {
     QuizResultDTO submitQuiz(String username,Long quizId,QuizAttemptDTO attempt);
     List<DetailedQuestionResultDTO> getDetailedExplanation(String username, Long quizId, QuizAttemptDTO attempt);
     List<QuizResultHistoryDTO> getUserResultsHistory(String username);
+    boolean hasUserCompletedQuiz(Long quizId, String email);
 }

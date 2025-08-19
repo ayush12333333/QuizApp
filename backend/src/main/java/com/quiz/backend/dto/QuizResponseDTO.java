@@ -18,4 +18,5 @@ public class QuizResponseDTO {
     private QuizCategory category;
     private QuizDifficulty difficulty;
     private int timer;
+    private boolean completed;
 }

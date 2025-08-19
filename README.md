@@ -40,3 +40,54 @@ It allows admins to create quizzes and questions, while users can attempt quizze
 
 ---
 
+## ⚙️ Setup Instructions
+
+### 1️⃣ Clone the Repository  
+```bash
+git clone https://github.com/ayush12333333/QuizApp
+cd quizapp
+```
+2️⃣ Setup Database (MySQL)
+```bash
+Install MySQL and create a database:
+sql
+CREATE DATABASE quizapp;
+```
+
+3️⃣ Configure application.properties
+```bash
+application.properties
+spring.application.name=Quiz
+spring.datasource.url=jdbc:mysql://localhost:3306/quizapp
+spring.datasource.username=root
+spring.datasource.password=your_password
+
+
+# ⚡ JPA / Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+
+# Server Port
+server.port=8081
+```
+4️⃣ Run Backend (Spring Boot)
+```bash
+cd backend
+./mvnw spring-boot:run
+Backend will start at: http://localhost:8081
+```
+
+5️⃣ Run Frontend (React + Tailwind)
+```bash
+cd frontend
+npm install
+npm start
+Frontend will start at: http://localhost:5173
+```
+📸 Screenshot
+### 🏠 Dashboard
+![Dashboard](screenshots/QuizApp%20Screenshot.png)
+
+
+
